@@ -1,0 +1,63 @@
+{
+  "vpc-provider:account=034578620650:filter.tag:Name=FisStackVpc/FisVpc:region=us-west-2:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0c5333d6e9426a792",
+    "vpcCidrBlock": "10.0.0.0/16",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "FisPriv",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-051d3ad5580f7ab39",
+            "cidr": "10.0.2.0/24",
+            "availabilityZone": "us-west-2a",
+            "routeTableId": "rtb-0bdac4ed049627124"
+          },
+          {
+            "subnetId": "subnet-03bedf0a03f74b25d",
+            "cidr": "10.0.3.0/24",
+            "availabilityZone": "us-west-2b",
+            "routeTableId": "rtb-05cd5ae276003d9d5"
+          }
+        ]
+      },
+      {
+        "name": "FisIso",
+        "type": "Isolated",
+        "subnets": [
+          {
+            "subnetId": "subnet-0f45bad363cc7fdd6",
+            "cidr": "10.0.4.0/24",
+            "availabilityZone": "us-west-2a",
+            "routeTableId": "rtb-03ead4d843fdb7566"
+          },
+          {
+            "subnetId": "subnet-0e4cf69cfa6b6da30",
+            "cidr": "10.0.5.0/24",
+            "availabilityZone": "us-west-2b",
+            "routeTableId": "rtb-0f4cfad9c4c9683fc"
+          }
+        ]
+      },
+      {
+        "name": "FisPub",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-0ba4d3552d68ad323",
+            "cidr": "10.0.0.0/24",
+            "availabilityZone": "us-west-2a",
+            "routeTableId": "rtb-0975928d83f59f6b0"
+          },
+          {
+            "subnetId": "subnet-0d646415f47a014d5",
+            "cidr": "10.0.1.0/24",
+            "availabilityZone": "us-west-2b",
+            "routeTableId": "rtb-01eca10773869334c"
+          }
+        ]
+      }
+    ]
+  }
+}
