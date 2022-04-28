@@ -11,13 +11,13 @@ Now that we have interrupted our processing job, we want to restart it and hope 
 
  - For this purpose, navigate to the "Elastic Container Service" dashboard.
  - Select the `FisStackECS-Cluster`
- - Click `Tasks` and `Run new task`
+ - Click **Tasks** and **Run new task**
  - Select `FARGATE` and `Linux`
  - For "Task Definition" select the `FisStopTaskStackTaskDef`
- - For "Cluster VPC" select the one ending with `...FisVpc` 
+ - For **Cluster VPC** select the one ending with `...FisVpc` 
  - Select one of the 2 **Private Subnets** - we made sure they have a route to the internet to retrieve the Docker image
  - Finally click "Run Task"
- - Lastly, take note of the task ID that should looke like '96a7f974215d4c5cad9f57a64431722a'
+ - Lastly, take note of the task ID that should look similar to `96a7f974215d4c5cad9f57a64431722a`
 
 ### Observations
 
@@ -37,4 +37,4 @@ We could make multiple improvements to the current state:
  2. You could implement a re-start mechanism through an independent process. This process could frequently check the health of the processing job and the progress in the database. If needed it could restart the task. You could use [Amazon EventBridge](https://aws.amazon.com/eventbridge/) and [AWS Lambda](https://aws.amazon.com/lambda/) for this purpose.
  3. Alternatively, consider a re-architecture where an [Amazon SQS](https://aws.amazon.com/sqs/) queue is used to contain every work item. The app could simply poll one item after another and process them. If the app is interrupted, the queue is carries state implicitly.
 
-In this workshop we will focus on **improvement area 1**.
+In this chapter we will focus on **improvement area 1**.
