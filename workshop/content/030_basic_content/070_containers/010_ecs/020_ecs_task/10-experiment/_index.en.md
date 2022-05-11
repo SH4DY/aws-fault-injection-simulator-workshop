@@ -29,18 +29,20 @@ Create a new experiment template:
   * add `Description` of `Stop ECS Task during processing`
   * select `FisWorkshopServiceRole` as execution role
 
-
-
 ### Action definition
 For "Name" enter `StopECSTask` and you can skip the Description. For "Action type" select `aws:ecs:stop-task`. Click "Save".
 
 ### Target selection
 
-We will skip target selection for now and come back to it once we start the ECS task.
+ - In the "Targets" section, click **Edit**
+ - Select **Resource tags, filter and parameters"
+ - We will use a tag to identify the task. The tag is defined in the ECS Task definition and you wil be able to see it when you run the task.
+ - Under **Resource tags** enter `fisTarget` for **Key** and `true` for **Value**
+ - Click **Save**
 
-### Creating template without stop conditions
+### Creating the template without stop conditions
 
-Confirm that you wish to create the template without stop condition.
+Click **Create experiment template** and confirm that you wish to create the template without stop condition.
 
 
 ## Validation procedure - Run the task successfully
@@ -54,8 +56,8 @@ Now let's run the task, which will take around **5 minutes** to complete. It wri
  - For "Task Definition" select the `FisStopTaskStackTaskDef`
  - For "Cluster VPC" select the one ending with `...FisVpc` 
  - Select one of the 2 **Private Subnets** - we made sure they have a route to the internet to retrieve the Docker image
+ - At the bottom of the page, make sure the tag `fisTarget` - `true` is already predefined. FIS uses this tag to target.
  - Finally click "Run Task"
- - Lastly, take note of the task ID that should looke like '96a7f974215d4c5cad9f57a64431722a'
 
 ## Run FIS experiment - Interrupt the task
 
@@ -63,10 +65,7 @@ In this 5 minute window, we now want to interrupt the task with FIS:
 
  - Switch to the FIS console
  - Select the `FisWorkshopECSTask` experiment template we created before
- - Click "Actions" - "Update" 
- - In the "Targets" section, click "Edit"
- - Under "Resource IDs", enter or select the task ID you noted above.
- - Hit "Save" and "Update experiment template"
+ - Click **Start experiment** 
  - Start the experiment
 
 

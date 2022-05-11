@@ -61,6 +61,8 @@ Before we re-run the experiment we need to clear the DynamoDB table from the res
 
 ## Repeat the experiment
 
+Now we want to re-run the task and repeat the experiment:
+
  - Navigate to the [ECS console](console.aws.amazon.com/ecs/home) 
  - Click **Task Definitions** and select `FisStopTaskImproved...` which contains the improved code
  - Click **Actions** and **Run Task**
@@ -70,16 +72,12 @@ Before we re-run the experiment we need to clear the DynamoDB table from the res
  - For **Cluster VPC** select the one ending with `...FisVpc` 
  - Select one of the 2 **Private Subnets** - we made sure they have a route to the internet to retrieve the Docker image
  - Finally click "Run Task"
- - Use the same settings as before to run it. 
 
-Now let's interrupt the task again.
+Now let's interrupt the task again:
 
  - Switch to the FIS console
  - Select the `FisWorkshopECSTask` experiment template we created before
- - Click "Actions" - "Update" 
- - In the "Targets" section, click "Edit"
- - Under "Resource IDs", enter or select the task ID you noted above.
- - Hit "Save" and "Update experiment template"
+ - Click **Start experiment** 
  - Start the experiment
 
  ### Check progress
