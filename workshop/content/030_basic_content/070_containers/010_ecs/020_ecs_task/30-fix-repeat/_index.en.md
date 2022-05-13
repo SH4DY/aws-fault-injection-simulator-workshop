@@ -82,9 +82,9 @@ Now let's interrupt the task again:
 
  ### Check progress
 
- On the ECS task overview, check the **Logs** tab again. Again you should see some log messages showing progress.
+ On the ECS task overview, check the **Logs** tab again. Again you should see some log messages showing where the task was interrupted.
 
- ++++ TODO Screenshot Logs with progress +++
+ {{< img "task-log-interrupted.png" "ECS Task log output showing where task was interrupted" >}}
 
  So far, so good.
 
@@ -106,7 +106,8 @@ Now let's restart the improved task and check if it actually continues where it 
 
  On the task overview, click on **Logs** again. You should see something like the following:
 
-++++ TODO screenshot showing logs where the task has started a second time and continued at an index != 0 +++
+{{< img "task-log-continued-at.png" "ECS Task log output showing task started where it left off when interrupted" >}}
+
 
 You can see how the improved task was interrupted, then re-started and instead of restarting from index 0, it uses additional logic to prevent duplicate work. Great!
 

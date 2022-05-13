@@ -79,7 +79,7 @@ Back on the cluster overview
  - Change to the Logs tab. Alternatively you can navigate to CloudWatch Logs and find your container logs there.
  - The task we are running logs every processing step and a few minutes after starting the task, you should see an output similar to the following:
 
- ++++ TODO Screenshot task logs ++++ 
+{{< img "task-log-interrupted.png" "ECS Task log output interrupted by FIS" >}}
 
 You can see how the ECS task wrote an incrementing index to DynamoDB every 30 seconds but FIS stopped the task before writing all items.
 

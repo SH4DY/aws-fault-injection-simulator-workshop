@@ -16,20 +16,23 @@ Now that we have interrupted our processing job, we want to restart it and hope 
  - For "Task Definition" select the `FisStopTaskStackTaskDef`
  - For **Cluster VPC** select the one ending with `...FisVpc` 
  - Select one of the 2 **Private Subnets** - we made sure they have a route to the internet to retrieve the Docker image
+ - At the bottom of the page, make sure the tag `fisTarget` - `true` is already predefined. FIS uses this tag to target.
  - Finally click "Run Task"
- - Lastly, take note of the task ID that should look similar to `96a7f974215d4c5cad9f57a64431722a`
 
 ### Observations
 
-Give it 1-2 minutes and then check the logs:
+Give it 2-3 minutes then check the logs. This time we will use the AWS CloudWatch console to check logs.
 
- - On your ECS cluster overview, click `Tasks'
- - Click on the task id of the task you just started
- - Change to the Logs tab. 
+ - Navigate to the [AWS Cloudwatch console](console.aws.amazon.com/cloudwatch/home?region=us-west-2).
+ - Click on **Log Groups**
+ - Use the search bar to look for a group starting with `FisStopTask`. Click on it.
+ - Click **Search log group**
+ - This view shows all logs in a certain time frame that this ECS task published.
 
- +++ TODO Screenshot that shows "Starting processing job at index 0 +++
+Unfortunately, you will see that the task has no notion of "graceful degradation" and it wasn't able to capture it's progress from the first run. It simply started from **index 0**. 
 
- Unfortunately, you will see that the task has no notion of "graceful degradation" and it wasn't able to capture it's progress from the first run. It simply started from **index 0**. 
+ {{< img "task-cloudwatch-log-ungraceful.png" "Log Group in CloudWatch showing task started from 0 after interrruption" >}}
+ 
 
 We could make multiple improvements to the current state:
 
