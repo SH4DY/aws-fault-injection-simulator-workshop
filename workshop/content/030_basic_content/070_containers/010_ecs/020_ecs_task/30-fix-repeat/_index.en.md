@@ -5,10 +5,25 @@ weight: 30
 services: true
 ---
 
+## Improvement ideas 
 
-## Learning and Improving
+We could make multiple improvements to the current state of the application:
 
-In the previous section we have identified that our ECS task doesn't capture progress: Every time it's interrupted, it starts from scratch. Now we want to improve the application and re-run the FIS experiment.
+ 1. The app inside the container can be improved to *read* the current state (i.e. which indexes were already written into the DB) and continue it's work from there.
+ 2. You could implement a re-start mechanism through an independent process. This process could frequently check the health of the processing job and the progress in the database. If needed it could restart the task. You could use [Amazon EventBridge](https://aws.amazon.com/eventbridge/) and [AWS Lambda](https://aws.amazon.com/lambda/) for this purpose.
+ 3. Alternatively, consider a re-architecture where an [Amazon SQS](https://aws.amazon.com/sqs/) queue is used to contain every work item. The app could simply poll one item after another and process them. If the app is interrupted, the queue is carries state implicitly.
+
+In this chapter we will focus on **improvement area 1**. This will allow us to save the time needed to re-process items that were already written to the database.
+
+Improvement **2** would further eliminate manual effort, as it could automatically restart an interrupted process.
+
+Improvement **3** is an elegant way to allow parallelization of processing, as the queue simply holds all work items and multiple containers can pick up work items from the queue.
+
+## Checkpointing
+
+In the previous section we have identified that our ECS task doesn't capture progress: Every time it's interrupted, it starts from scratch. 
+
+The idea of checkpointing is to save processing time (and consequently cost) whenever our task is interrupted. If a complete run would take hours and the task is interrupted, we want it to restart at the index it was interrupted at.
 
 ### Improve the application
 
@@ -18,14 +33,14 @@ We want to change the application, such that it reads from the DB **first** to u
 
 **If it's a subsequent run,** it will keep iterating through the DB (index 0,1,2,3...) and find the point where it was interrupted.
 
-*This approach is extremely simplistic and certainly not production-ready, but it serves the purpose for this example.* 
+*This approach is very simplistic and scales linearly with the number of items but it serves the purpose of this example. Refer to the section above for improvements that could make such a workload production ready.* 
 
-
-#### Improved code
+### Improved code
 We have prepared a second ECS Task Definition using an improved Docker container image for you to use. Here is an excerpt from the code for you to understand.
 
 The old main-loop looked like this:
 ```javascript
+console.log("Starting at ", index)
 while(index < batchSize){
     //do some work. Write results and index to DynamoDB.
     index++;
@@ -35,14 +50,15 @@ while(index < batchSize){
 While the new main-loop of the application looks like:
 
 ```javascript
+//Before going into the work-loop, we call a function that reads from the database and returns the highest found index previously written
 continueAt()
-.then(cont => {
-  console.log("Continuing at ", cont)
+.then(index => {
+  console.log("Starting at ", index)
   while(cont < batchSize){
     //do some work. Write results and index to DynamoDB.
-    cont++;
+    index++;
   }  
-}).catch(err => console.log('Failed execution of batch job', err))
+})
 ```
 
 The key being the `continueAt()` function that is called first, reading from the DB and returning with the index to continue with `cont`. This is also what you will see in log output.
@@ -75,7 +91,7 @@ Now we want to re-run the task and repeat the experiment:
 
 Now let's interrupt the task again:
 
- - Switch to the FIS console
+ - Switch to the [FIS console](console.aws.amazon.com/fis/home)
  - Select the `FisWorkshopECSTask` experiment template we created before
  - Click **Start experiment** 
  - Start the experiment
@@ -104,8 +120,15 @@ Now let's restart the improved task and check if it actually continues where it 
 
  ### Observe results
 
- On the task overview, click on **Logs** again. You should see something like the following:
+Let's check the results
 
+ - Navigate to the [AWS Cloudwatch console](console.aws.amazon.com/cloudwatch/home?region=us-west-2).
+ - Click on **Log Groups**
+ - Use the search bar to look for a group starting with `FisStopTask`. Click on it.
+ - Click **Search log group**
+ - This view shows all logs in a certain time frame that this ECS task published.
+
++++ TODO replace screenshot +++
 {{< img "task-log-continued-at.png" "ECS Task log output showing task started where it left off when interrupted" >}}
 
 
